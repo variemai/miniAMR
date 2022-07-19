@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <mpi.h>
 #include <math.h>
+#include <stdlib.h>
 #include <sys/time.h>
 
 #include "block.h"
@@ -44,10 +45,29 @@ void stencil_check(int);
 // This routine does the stencil calculations.
 void stencil_driver(int var, int cacl_stage)
 {
+   //Profiling information
+   struct timeval start, end;
+   long ptimer;
+   double diff;
    if (stencil){
       //fprintf(stderr,"Stencil_cal stencil\n");
       //fprintf(stderr, "%llu\n",its);
+      its++;
+      gettimeofday(&start, NULL);
       stencil_calc(var, stencil);
+      gettimeofday(&end, NULL);
+      ptimer = ((end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec));
+      if ( avg_times_p > 0.0 ){
+         diff = fabs(avg_times_p-(double)ptimer);
+         if ( diff > 0.20*avg_times_p )
+            fprintf(stderr, "curr = %lu, average = %lf\n",ptimer,avg_times_p);
+      }
+      accumulator += ptimer;
+      avg_times_p = (double)accumulator/(double)its;
+      /* fprintf(stderr,"Accumulator = %llu, Iterations = %llu\n",accumulator,its); */
+      /* if ( its == 192000 ) */
+      /*    fprintf(stderr, "%lf\n",(double)accumulator/its); */
+      //fprintf(stderr, "curr = %ld, prev = %llu\n",ptimer,profile_timer);
    }
    else
       if (!var){
@@ -94,12 +114,8 @@ void stencil_calc(int var, int stencil_in)
    double sb, sm, sf, work[x_block_size+2][y_block_size+2][z_block_size+2];
    block *bp;
 
-   struct timeval start, end;
-   long ptimer;
    if (stencil_in == 7) {
-      gettimeofday(&start, NULL);
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
-         its++;
          bp = &blocks[sorted_list[in].n];
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
@@ -116,12 +132,6 @@ void stencil_calc(int var, int stencil_in)
                for (k = 1; k <= z_block_size; k++)
                   bp->array[var][i][j][k] = work[i][j][k];
       }
-      gettimeofday(&end, NULL);
-      ptimer = ((end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec));
-      if ( ptimer > profile_timer ){
-         fprintf(stderr, "curr = %ld, prev = %ld\n",ptimer,profile_timer);
-      }
-      profile_timer = ptimer;
       total_fp_divs += (double) num_active*num_cells;
       total_fp_adds += (double) 6*num_active*num_cells;
    } else {
