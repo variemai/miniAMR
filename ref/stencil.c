@@ -27,12 +27,12 @@
 #include <mpi.h>
 #include <math.h>
 #include <stdlib.h>
-#include <sys/time.h>
+#include <time.h>
 
 #include "block.h"
 #include "comm.h"
 #include "proto.h"
-
+#define _POSIX_C_SOURCE 200809L
 void stencil_calc(int, int);
 void stencil_0(int);
 void stencil_x(int);
@@ -46,21 +46,21 @@ void stencil_check(int);
 void stencil_driver(int var, int cacl_stage)
 {
    //Profiling information
-   struct timeval start, end;
-   long ptimer;
+   struct timespec start, end;
+   long long ptimer;
    double diff;
    if (stencil){
       //fprintf(stderr,"Stencil_cal stencil\n");
       //fprintf(stderr, "%llu\n",its);
       its++;
-      gettimeofday(&start, NULL);
+      clock_gettime(CLOCK_REALTIME, &start);
       stencil_calc(var, stencil);
-      gettimeofday(&end, NULL);
-      ptimer = ((end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec));
+      clock_gettime(CLOCK_REALTIME, &end);
+      ptimer = ((end.tv_sec * 1000000000 + end.tv_nsec) - (start.tv_sec * 1000000000 + start.tv_nsec));
       if ( avg_times_p > 0.0 ){
          diff = fabs(avg_times_p-(double)ptimer);
          if ( diff > 0.20*avg_times_p )
-            fprintf(stderr, "curr = %lu, average = %lf\n",ptimer,avg_times_p);
+            fprintf(stderr, "curr = %lld, average = %lf\n",ptimer,avg_times_p);
       }
       accumulator += ptimer;
       avg_times_p = (double)accumulator/(double)its;
