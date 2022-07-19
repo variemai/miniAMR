@@ -123,6 +123,8 @@ void move_spots(int, int);
 void move_spots_back(void);
 
 // stencil.c
+static unsigned long long its = 0;
+static long profile_timer = 0;
 void stencil_driver(int, int);
 
 // util.c

@@ -23,13 +23,15 @@
 //                    Richard F. Barrett (rfbarre@sandia.gov)
 //
 // ************************************************************************
-
+#include <stdio.h>
 #include <mpi.h>
 #include <math.h>
+#include <sys/time.h>
 
 #include "block.h"
 #include "comm.h"
 #include "proto.h"
+
 void stencil_calc(int, int);
 void stencil_0(int);
 void stencil_x(int);
@@ -42,35 +44,48 @@ void stencil_check(int);
 // This routine does the stencil calculations.
 void stencil_driver(int var, int cacl_stage)
 {
-   if (stencil)
+   if (stencil){
+      //fprintf(stderr,"Stencil_cal stencil\n");
+      //fprintf(stderr, "%llu\n",its);
       stencil_calc(var, stencil);
+   }
    else
-      if (!var)
+      if (!var){
+         //fprintf(stderr,"Stencil_cal 7\n");
          stencil_calc(var, 7);
+      }
       else if (var < 4*mat) {
          switch (cacl_stage%6) {
          case 0:
+            //fprintf(stderr,"Stencil_0\n");
             stencil_0(var);
             break;
          case 1:
+            //fprintf(stderr,"Stencil_x\n");
             stencil_x(var);
             break;
          case 2:
+            //fprintf(stderr,"Stencil_y\n");
             stencil_y(var);
             break;
          case 3:
+            //fprintf(stderr,"Stencil_z\n");
             stencil_z(var);
             break;
          case 4:
+            //fprintf(stderr,"Stencil_7\n");
             stencil_7(var);
             break;
          case 5:
+            //fprintf(stderr,"Stencil_27\n");
             stencil_27(var);
             break;
          }
          stencil_check(var);
-      } else
-          stencil_calc(var, 7);
+      } else{
+         //fprintf(stderr,"Else stencil_cal 7\n");
+         stencil_calc(var, 7);
+      }
 }
 
 void stencil_calc(int var, int stencil_in)
@@ -79,8 +94,12 @@ void stencil_calc(int var, int stencil_in)
    double sb, sm, sf, work[x_block_size+2][y_block_size+2][z_block_size+2];
    block *bp;
 
+   struct timeval start, end;
+   long ptimer;
    if (stencil_in == 7) {
+      gettimeofday(&start, NULL);
       for (in = 0; in < sorted_index[num_refine+1]; in++) {
+         its++;
          bp = &blocks[sorted_list[in].n];
          for (i = 1; i <= x_block_size; i++)
             for (j = 1; j <= y_block_size; j++)
@@ -97,6 +116,12 @@ void stencil_calc(int var, int stencil_in)
                for (k = 1; k <= z_block_size; k++)
                   bp->array[var][i][j][k] = work[i][j][k];
       }
+      gettimeofday(&end, NULL);
+      ptimer = ((end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec));
+      if ( ptimer > profile_timer ){
+         fprintf(stderr, "curr = %ld, prev = %ld\n",ptimer,profile_timer);
+      }
+      profile_timer = ptimer;
       total_fp_divs += (double) num_active*num_cells;
       total_fp_adds += (double) 6*num_active*num_cells;
    } else {
