@@ -28,12 +28,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <mpi.h>
+#include <pthread.h>
 
 #define MA_MAIN
 #include "block.h"
 #include "comm.h"
 #include "timer.h"
 #include "proto.h"
+#include "monitor.h"
 
 int main(int argc, char** argv)
 {
@@ -346,6 +348,13 @@ int main(int argc, char** argv)
    }
 
    timer_main = timer() - t1;
+	pthread_t t_1;
+	pthread_t t_2;
+
+	printf("Periodic threads using timerfd\n");
+
+	pthread_create(&t_1, NULL, monitor, NULL);
+
    driver();
 
    profile();
