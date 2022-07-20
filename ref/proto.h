@@ -123,9 +123,6 @@ void move_spots(int, int);
 void move_spots_back(void);
 
 // stencil.c
-static unsigned long long its = 0;
-static unsigned long long accumulator = 0;
-static double avg_times_p = 0.0;
 void stencil_driver(int, int);
 
 // util.c
