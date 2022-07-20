@@ -1,15 +1,16 @@
-CC   = mpicc
-LD   = mpicc
+MPICC  = $(PREP) mpicc
+CC   = $(MPICC)
+LD   = $(MPICC)
 CPPFLAGS = -I.
 CFLAGS = -O3
-LDFLAGS =
-LDLIBS = -lm
+LDFLAGS = #-L/opt/spack/spack_git/opt/spack/linux-debian10-skylake_avx512/gcc-8.3.0/extrae-3.8.3-zuf35mptjzz5rlkbdlxb2ptbliu23gwl/lib 
+LDLIBS = -lm #-lmpitrace -lmpitimer 
 
 EXEC = miniAMR.x
 
 OBJS = block.o check_sum.o comm_block.o comm.o comm_parent.o comm_refine.o \
        comm_util.o driver.o init.o main.o move.o pack.o plot.o profile.o \
-       rcb.o refine.o sfc.o stencil.o util.o
+       rcb.o refine.o sfc.o stencil.o util.o monitor.o
 
 $(EXEC): $(OBJS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
@@ -40,7 +41,7 @@ driver.o: block.h comm.h proto.h timer.h
 
 init.o: block.h proto.h comm.h
 
-main.o: block.h comm.h proto.h param.h timer.h
+main.o: block.h comm.h proto.h param.h timer.h monitor.h
 
 move.o: block.h comm.h proto.h
 
@@ -59,3 +60,5 @@ sfc.o: block.h comm.h proto.h timer.h
 stencil.o: block.h comm.h proto.h
 
 util.o: block.h comm.h proto.h timer.h
+
+monitor.o: block.h comm.h proto.h timer.h monitor.h
