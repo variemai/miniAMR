@@ -14,9 +14,7 @@
 #include <sys/timerfd.h>
 #include <limits.h>
 #include "monitor.h"
-#include "proto.h"
 
-int some_val = 1;
 
 static int make_periodic(unsigned int period, struct periodic_info *info)
 {
