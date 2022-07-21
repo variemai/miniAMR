@@ -32,7 +32,6 @@
 #include "block.h"
 #include "comm.h"
 #include "proto.h"
-#include "monitor.h"
 #define _POSIX_C_SOURCE 200809L
 
 void stencil_calc(int, int);
