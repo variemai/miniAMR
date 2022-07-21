@@ -90,8 +90,8 @@ static void *monitor(void *arg)
 {
 	struct periodic_info info;
 
-	//printf("Thread 1 period 20ms\n");
-	make_periodic(2000, &info);
+	//printf("Thread 1 period 2ms\n");
+	make_periodic(200, &info);
 	while (1) {
 		wait_period(&info);
       fprintf(stderr,"%llu\n",its);
