@@ -420,7 +420,11 @@ int main(int argc, char** argv)
 	pthread_create(&t_1, NULL, monitor, NULL);
 
    driver();
-
+   int s;
+   s= pthread_join(t_1, NULL);
+   if ( s != 0 ){
+      perror("thread_join");
+   }
    profile();
 
    deallocate();
