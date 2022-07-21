@@ -355,17 +355,12 @@ int main(int argc, char** argv)
    }
 
    timer_main = timer() - t1;
-	/* pthread_t t_1; */
-
-	/* printf("Periodic threads using timerfd\n"); */
-
-	/* pthread_create(&t_1, NULL, monitor, NULL); */
 
    size_t timerz;
 
    initialize();
 
-   timerz = start_timer(300, my_time_handler, TIMER_PERIODIC, NULL);
+   timerz = start_timer(10, my_time_handler, TIMER_PERIODIC, NULL);
 
    driver();
 
