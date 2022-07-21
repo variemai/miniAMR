@@ -37,6 +37,7 @@
 #include "timer.h"
 #include "proto.h"
 
+static unsigned long long  monitor_calls = 0;
 
 struct periodic_info {
 	int timer_fd;
@@ -94,8 +95,9 @@ static void *monitor(void *arg)
 	//printf("Thread 1 period 2ms\n");
 	make_periodic(1000, &info);
 	while (1) {
+      monitor_calls++;
 		wait_period(&info);
-      fprintf(stderr,"%llu %llu\n",its, info.wakeups_missed);
+      fprintf(stderr,"its: %llu, missed: %llu, calls: %llu\n",its, info.wakeups_missed,monitor_calls);
 	}
 	return NULL;
 }
