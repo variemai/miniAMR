@@ -29,6 +29,7 @@
 #include <string.h>
 #include <mpi.h>
 #include <pthread.h>
+#include <sys/timerfd.h>
 
 #define MA_MAIN
 #include "block.h"
