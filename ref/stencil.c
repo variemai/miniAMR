@@ -43,13 +43,12 @@ void stencil_7(int);
 void stencil_27(int);
 void stencil_check(int);
 
+
+unsigned long long its = 0;
 // This routine does the stencil calculations.
 void stencil_driver(int var, int cacl_stage)
 {
    //Profiling information
-   struct timespec start, end;
-   long long ptimer;
-   double diff;
    if (stencil){
       //fprintf(stderr,"Stencil_cal stencil\n");
       //fprintf(stderr, "%llu\n",its);
