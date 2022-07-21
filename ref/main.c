@@ -97,7 +97,7 @@ static void *monitor(void *arg)
 	while (1) {
       monitor_calls++;
 		wait_period(&info);
-      fprintf(stderr,"its: %llu, missed: %llu, calls: %llu\n",its, info.wakeups_missed,monitor_calls);
+      fprintf(stderr,"its: %llu, monitor calls: %llu\n",its,monitor_calls);
 	}
 	return NULL;
 }
