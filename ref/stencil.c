@@ -55,17 +55,17 @@ void stencil_driver(int var, int cacl_stage)
       //fprintf(stderr,"Stencil_cal stencil\n");
       //fprintf(stderr, "%llu\n",its);
       its++;
-      clock_gettime(CLOCK_REALTIME, &start);
+      /* clock_gettime(CLOCK_REALTIME, &start); */
       stencil_calc(var, stencil);
-      clock_gettime(CLOCK_REALTIME, &end);
-      ptimer = ((end.tv_sec * 1000000000 + end.tv_nsec) - (start.tv_sec * 1000000000 + start.tv_nsec));
-      if ( avg_times_p > 0.0 ){
-         diff = fabs(avg_times_p-(double)ptimer);
-         if ( diff > 0.20*avg_times_p )
-            fprintf(stderr, "curr = %lld, average = %lf\n",ptimer,avg_times_p);
-      }
-      accumulator += ptimer;
-      avg_times_p = (double)accumulator/(double)its;
+      /* clock_gettime(CLOCK_REALTIME, &end); */
+      /* ptimer = ((end.tv_sec * 1000000000 + end.tv_nsec) - (start.tv_sec * 1000000000 + start.tv_nsec)); */
+      /* if ( avg_times_p > 0.0 ){ */
+      /*    diff = fabs(avg_times_p-(double)ptimer); */
+      /*    if ( diff > 0.20*avg_times_p ) */
+      /*       fprintf(stderr, "curr = %lld, average = %lf\n",ptimer,avg_times_p); */
+      /* } */
+      /* accumulator += ptimer; */
+      /* avg_times_p = (double)accumulator/(double)its; */
       /* fprintf(stderr,"Accumulator = %llu, Iterations = %llu\n",accumulator,its); */
       /* if ( its == 192000 ) */
       /*    fprintf(stderr, "%lf\n",(double)accumulator/its); */

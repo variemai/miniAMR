@@ -90,11 +90,11 @@ static void *monitor(void *arg)
 {
 	struct periodic_info info;
 
-	printf("Thread 1 period 200ms\n");
-	make_periodic(200000, &info);
+	//printf("Thread 1 period 20ms\n");
+	make_periodic(2000, &info);
 	while (1) {
 		wait_period(&info);
-        fprintf(stderr,"%llu\n",its);
+      fprintf(stderr,"%llu\n",its);
 	}
 	return NULL;
 }
@@ -411,7 +411,6 @@ int main(int argc, char** argv)
 
    timer_main = timer() - t1;
 	pthread_t t_1;
-	pthread_t t_2;
 
 	printf("Periodic threads using timerfd\n");
 
