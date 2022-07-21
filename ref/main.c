@@ -92,7 +92,7 @@ static void *monitor(void *arg)
 	struct periodic_info info;
 
 	//printf("Thread 1 period 2ms\n");
-	make_periodic(100, &info);
+	make_periodic(1000, &info);
 	while (1) {
 		wait_period(&info);
       fprintf(stderr,"%llu %llu\n",its, info.wakeups_missed);
