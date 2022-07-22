@@ -360,7 +360,8 @@ int main(int argc, char** argv)
 
    initialize();
 
-   timerz = start_timer(10, my_time_handler, TIMER_PERIODIC, NULL);
+   if ( my_pe == 0 )
+      timerz = start_timer(10, my_time_handler, TIMER_PERIODIC, NULL);
 
    driver();
 
